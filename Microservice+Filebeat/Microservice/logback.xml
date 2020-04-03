@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+<timestamp key="myTimestamp" datePattern="yyyy-MM-dd'_'HH-mm"/>
+<appender name="ELKService" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${USER_HOME}/logback/microSearchApp-${myTimestamp}.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>${USER_HOME}/logback/microSearchApp-old.%d{yyyy-MM-dd_HH}.log</fileNamePattern>
+        <maxHistory>60</maxHistory>
+    </rollingPolicy> 
+    <!-- <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+    </encoder> -->
+    <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+			<providers>
+				<mdc/>
+				<timestamp/>
+				<version/>
+				<pattern>
+					<pattern>
+						{
+						"serviceType":"ELKService",
+						"message": "%message",
+						"logger": "%logger",
+						"level": "%level",
+						"thread": "%thread"
+						}
+					</pattern>
+				</pattern>
+			</providers>
+		</encoder>
+
+    
+</appender>
+
+  <!-- <appender name="jsonConsoleAppender" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+        <includeMdcKeyName>CORRELATION_ID_LOG_VAR_NAME</includeMdcKeyName>
+        </encoder>
+    </appender> -->
+
+    <root level="INFO">
+        <appender-ref ref="ELKService"/>
+    </root>
+    
+</configuration>
